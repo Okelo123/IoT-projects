@@ -1,0 +1,62 @@
+from machine import Pin
+from time import sleep
+
+# Define LEDs for traffic lights
+red_led = Pin(15, Pin.OUT)
+yellow_led = Pin(14, Pin.OUT)
+green_led = Pin(13, Pin.OUT)
+
+# Define LED for pedestrian crossing
+pedestrian_led = Pin(12, Pin.OUT)
+
+# Define buzzer
+buzzer = Pin(16, Pin.OUT)
+
+def pulse_buzzer(times, on_time, off_time):
+    for _ in range(times):
+        buzzer.on()
+        sleep(on_time)  # Shorter buzz time
+        buzzer.off()
+        sleep(off_time)  # Short pause between buzzes
+
+def traffic_light_cycle():
+    # Traffic light sequence
+    red_led.on()
+    yellow_led.off()
+    green_led.off()
+    sleep(5)  # Red light duration
+
+    red_led.off()
+    yellow_led.on()
+    sleep(2)  # Yellow light duration
+
+    yellow_led.off()
+    green_led.on()
+    sleep(5)  # Green light duration
+
+    green_led.off()
+    yellow_led.on()
+    sleep(2)  # Yellow light duration
+    yellow_led.off()
+
+def pedestrian_crossing():
+    # Turn on red light for vehicles
+    red_led.on()
+    green_led.off()
+    yellow_led.off()
+    
+    # Buzzer pulses to signal start of pedestrian crossing
+    pulse_buzzer(times=5, on_time=0.2, off_time=0.2)
+    
+    # Turn on pedestrian signal
+    pedestrian_led.on()
+    sleep(5)  # Pedestrian crossing time
+    
+    pedestrian_led.off()
+    
+    # Buzzer pulses to signal end of pedestrian crossing
+    pulse_buzzer(times=5, on_time=0.2, off_time=0.2)
+
+while True:
+    pedestrian_crossing()  # Trigger pedestrian crossing
+    traffic_light_cycle()  # Standard traffic light cycle
